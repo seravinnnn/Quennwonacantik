@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>EVENT LIVE APLIKASI + GARAPAN + REFF — by WONA</title>
+    <style>
+      /* ===== Base ===== */
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+          Arial, "Noto Sans";
+        color: #e9f0ff;
+        background: #061022; /* dasar biru gelap */
+        overflow-x: hidden;
+      }
+
+      /* ===== Aurora Biru Pekat (CSS-only, ringan) ===== */
+      .aurora {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .aurora::before,
+      .aurora::after {
+        content: "";
+        position: absolute;
+        inset: -18% -10% -12% -18%;
+        background: radial-gradient(
+            40vmax 40vmax at 12% 18%,
+            rgba(86, 137, 255, 0.4),
+            transparent 60%
+          ),
+          radial-gradient(
+            36vmax 36vmax at 82% 12%,
+            rgba(26, 92, 255, 0.35),
+            transparent 60%
+          ),
+          radial-gradient(
+            42vmax 42vmax at 28% 86%,
+            rgba(18, 218, 255, 0.28),
+            transparent 60%
+          );
+        filter: blur(28px) saturate(1.05);
+        animation: drift 26s ease-in-out infinite;
+        opacity: 0.9;
+      }
+      .aurora::after {
+        inset: -22% -16% -16% -22%;
+        background: radial-gradient(
+            42vmax 42vmax at 78% 78%,
+            rgba(16, 88, 220, 0.35),
+            transparent 60%
+          ),
+          radial-gradient(
+            36vmax 36vmax at 22% 72%,
+            rgba(10, 48, 160, 0.32),
+            transparent 60%
+          );
+        filter: blur(34px) saturate(1.05);
+        animation: drift2 34s ease-in-out infinite;
+        opacity: 0.65;
+      }
+      @keyframes drift {
+        0% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        50% {
+          transform: translate3d(2%, -1%, 0) scale(1.03);
+        }
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+      }
+      @keyframes drift2 {
+        0% {
+          transform: translate3d(0, 0, 0) scale(1.02);
+        }
+        50% {
+          transform: translate3d(-1.5%, 1.5%, 0) scale(1);
+        }
+        100% {
+          transform: translate3d(0, 0, 0) scale(1.02);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .aurora::before,
+        .aurora::after {
+          animation: none;
+        }
+      }
+
+      /* ===== Layout & Typography ===== */
+      .content {
+        position: relative;
+        z-index: 1;
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 28px 18px 90px;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        margin-bottom: 18px;
+        padding: 10px 14px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .title {
+        margin: 0;
+        font-family: "Times New Roman", Times, serif; /* sesuai request */
+        color: #ffffff; /* judul putih */
+        font-size: clamp(22px, 5.2vw, 40px);
+        letter-spacing: 0.02em;
+      }
+
+      .intro {
+        margin: 14px 0 22px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: rgba(15, 30, 70, 0.45);
+        border: 1px solid rgba(120, 160, 255, 0.25);
+        line-height: 1.6;
+        text-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+      }
+
+      .list {
+        display: grid;
+        gap: 16px;
+      }
+      .card {
+        padding: 16px;
+        border-radius: 16px;
+        background: rgba(8, 18, 40, 0.58);
+        border: 1px solid rgba(120, 160, 255, 0.22);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+      }
+      .card h3 {
+        margin: 0 0 8px;
+        font-size: clamp(16px, 3.2vw, 22px);
+      }
+      .card p {
+        margin: 6px 0;
+        line-height: 1.6;
+      }
+
+      /* ===== Link biru (teks saja, URL tidak ditulis) ===== */
+      :root {
+        --link-blue: #2f6cff;
+      }
+      a {
+        color: var(--link-blue);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      a:hover {
+        text-decoration-thickness: 2px;
+      }
+
+      /* ===== Footer & Sosmed ===== */
+      .footer {
+        margin-top: 22px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: rgba(15, 30, 70, 0.45);
+        border: 1px solid rgba(120, 160, 255, 0.25);
+        display: grid;
+        gap: 10px;
+      }
+      .by {
+        opacity: 0.95;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+      }
+      .contact span {
+        opacity: 0.95;
+      }
+
+      .social {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-top: 4px;
+      }
+      .social a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: inherit;
+        text-decoration: none;
+      }
+      .icon {
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+      }
+      .wa {
+        color: #25d366;
+      } /* WhatsApp brand */
+      .fb {
+        color: #1877f2;
+      } /* Facebook brand */
+      .social a:hover {
+        filter: brightness(1.08);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Aurora biru pekat -->
+    <div class="aurora"></div>
+
+    <div class="content">
+      <div class="wrap">
+        <header class="topbar">
+          <h1 class="title">EVENT LIVE APLIKASI + GARAPAN + REFF</h1>
+        </header>
+
+        <section class="intro">
+          <p>
+            <strong>Annyeong beb</strong>, Selamat datang di website ku, disini
+            ada beberapa event yg lagi live yang bisa di kalian garap, dipilih
+            atau di garap semua juga boleh. Saya menepati janji saya bakalan
+            sering update info. Kalo di posting di SW malah jadi numpuk nanti,
+            mending dijadiin arsip disini, mumpung aku lumayan dikit ngerti
+            coding xixixi.
+          </p>
+        </section>
+
+        <section class="list">
+          <!-- 1. PINTU -->
+          <article class="card">
+            <h3>1. PINTU</h3>
+            <p>
+              Aplikasi exchange indo ini lagi ngadain event reff + pengguna
+              baru, start dari tanggal 1 sampe akhir bulan.
+            </p>
+            <p>
+              <em>Event pertama:</em> Undang teman dapat 50.000, deposit min
+              100k, terus transaksi min 100k, wajib undang minimal 2 teman. Nah
+              akun teman mu itu supaya double bonusnya, depo nya mending Rp.
+              125.000 — biar sekalian terhubung ke event pengguna baru, nanti
+              kamu dapet 50.000, teman mu dapet 75.000.
+            </p>
+            <p>
+              <a
+                href="https://pintu.co.id/blog/referral-oktober-2025-ret"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                DISINI SYARAT DAN KETENTUAN 1 SOAL REFF
+              </a>
+              &nbsp;|&nbsp;
+              <a
+                href="https://pintu.co.id/blog/promo-pengguna-baru-pintu-bonus-hingga-1juta-usdt"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                DISINI SYARAT DAN KETENTUAN 2 (PENGGUNA BARU 75.000)
+              </a>
+            </p>
+            <p>
+              <strong>Catatan:</strong> Baca teliti ya beb, PINTU soalnya rawan
+              — lu transaksi duluan tapi belum kaitin rekening bank, nanti
+              hadiah nya malah gak land wkwk.
+            </p>
+          </article>
+
+          <!-- 2. GOPAY -->
+          <article class="card">
+            <h3>2. GOPAY</h3>
+            <p>
+              Aplikasi ewallet dengan total pengunna terbanyak kedua setelah
+              DANA, undang teman mu dan dapatkan hadiah s.d 150.000. Di setiap
+              akun ada 2 syarat dan ketentuan yang berbeda: ada yg disuruh
+              download doang dan reff tanpa KYC terus dapat hadiah, ada yang
+              disuruh KYC. Tergantung kehokian akun nya masing-masing.
+            </p>
+            <p>
+              <a
+                href="https://gopay.co.id/blog/program-referral-aplikasi-gopay"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                SYARAT DAN KETENTUANNYA DISINI YA
+              </a>
+            </p>
+          </article>
+
+          <!-- 3. BCA -->
+          <article class="card">
+            <h3>3. BANK CENTRAL ASIA</h3>
+            <p>
+              BCA top tier event individu, bisa buka rekening sampe 5 kali
+              kesempatan — artinya kalian bisa dapet 500k. Setiap pembukaan
+              rekening berhadiah 100k, hadiah landing 2 minggu, sangat di
+              sarankan memakai kode promo TOKOPEDIA agar cuan maksimal; jangan
+              kecanduan atau make kode Shopee, potongannya gede apabila di setor
+              ke penampung.
+            </p>
+            <p>
+              <a
+                href="https://www.bca.co.id/id/Campaign/2021/promo-bca-mobile"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                SYARAT DAN KETENTUAN EVENT NYA DISINI YA BEB
+              </a>
+            </p>
+          </article>
+
+          <!-- 4. TMRW UOB -->
+          <article class="card">
+            <h3>4. BANK TMRW UOB</h3>
+            <p>
+              Event live sampe akhir tahun maksimal reward sampe Rp. 325.000
+              kalo punya modal mencukupi, tapi rata rata penggarap cuma milih yg
+              dapet gocap.
+            </p>
+            <p>
+              <a
+                href="https://www.tmrwbyuob.com/id/id/mgm/program.html"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                SYARAT DAN KETENTUAN LENGKAPNYA DISINI YA
+              </a>
+            </p>
+          </article>
+
+          <!-- 5. BANK JAGO -->
+          <article class="card">
+            <h3>5. BANK JAGO</h3>
+            <p>
+              Dapatkan Rp. 50.000 masing masing tiap pengundang dan nasabah
+              baru, wajib hold saldo 500k.
+            </p>
+            <p>
+              <a
+                href="https://www.jago.com/id/jago/promo/referral"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                SYARAT DAN KETENTUANNYA DISINI
+              </a>
+            </p>
+          </article>
+
+          <!-- 6. BANK BINA DIGITAL -->
+          <article class="card">
+            <h3>6. BANK BINA DIGITAL</h3>
+            <p>
+              Dapatkan max Rp. 150.000 untuk setiap promo yang berlangsung, kalo
+              mau ngereff kalian wajib buat kode reff manual lewat form. Di
+              syarat dan ketentuan ada link form nya.
+            </p>
+            <p>
+              <a
+                href="https://binadigital.id/promotions/bina-ajak-teman-hingga-150rb/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                DISINI LINK LENGKAP EVENT NYA
+              </a>
+            </p>
+          </article>
+
+          <!-- 7. YEX EXCHANGE -->
+          <article class="card">
+            <h3>7. YEX EXCHANGE</h3>
+            <p>
+              Dapatkan bonus 10 USDT untuk trading futures, sebenernya banyak
+              hadiah cuma task yg lainnya modal.
+            </p>
+            <p>
+              <a
+                href="https://www.yex.io/en_US/taskCenter"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                BISA DI CEK DISINI BEB
+              </a>
+            </p>
+          </article>
+        </section>
+
+        <section class="footer">
+          <div class="by">Website by WONA</div>
+
+          <div class="contact">
+            <span>Hubungi saya siapa tau mau sleepcall:</span>
+            &nbsp;
+            <a
+              href="https://wa.me/+6283196024310"
+              target="_blank"
+              rel="noopener noreferrer"
+              >WhatsApp</a
+            >
+            &nbsp;·&nbsp;
+            <a
+              href="https://web.facebook.com/angel.vina.106"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Facebook</a
+            >
+          </div>
+
+          <!-- Logo WA & FB -->
+          <div class="social">
+            <a
+              class="wa"
+              href="https://wa.me/083196024310"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp"
+            >
+              <!-- WhatsApp icon -->
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  d="M20.5 12.1c0 4.7-3.9 8.5-8.6 8.5-1.5 0-2.9-.4-4.1-1l-4 1.2 1.2-3.9c-.8-1.3-1.3-2.8-1.3-4.4 0-4.7 3.9-8.5 8.6-8.5s8.6 3.8 8.6 8.5z"
+                />
+                <path
+                  d="M15.9 13.7c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.8 1-.2.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1-.6-.5-1-1.2-1.2-1.4-.1-.2 0-.3.1-.4.1-.1.2-.3.3-.4.1-.1.1-.2.2-.3.1-.1.1-.2 0-.4-.1-.2-.5-1.1-.7-1.5-.2-.4-.4-.3-.5-.3h-.4c-.1 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.4c.1.2 1.6 2.5 3.9 3.4.5.2.9.3 1.2.4.5.1 1 .1 1.3.1.4 0 1.4-.2 1.6-.8.2-.6.2-1.1.2-1.2 0-.1-.1-.2-.3-.3z"
+                />
+              </svg>
+              <span>WhatsApp</span>
+            </a>
+
+            <a
+              class="fb"
+              href="https://web.facebook.com/angel.vina.106"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
+              <!-- Facebook icon -->
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path
+                  d="M13.2 10.5h1.9V8.3h-1.9c-1.7 0-2.5.9-2.5 2.4v1.1H9v2.1h1.7V18h2.2v-4.1h1.8l.3-2.1h-2.1V10.9c0-.3.1-.4.3-.4z"
+                  fill="#fff"
+                />
+              </svg>
+              <span>Facebook</span>
+            </a>
+          </div>
+
+          <small
+            >Sementara 7 dulu, sebenernya masih banyak kaya reff perpinjolan,
+            tapi bukan prioritas.</small
+          >
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
